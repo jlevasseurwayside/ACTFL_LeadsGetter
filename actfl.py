@@ -12,29 +12,16 @@ new_fn = 'new_data.csv'
 old_fn = 'archive.csv'
 delta_fn = 'delta.csv'
 lock_fn = 'lock.txt'
-dummy_fn = 'dummydata.csv'
 
 
 def get_conf_data():
-
-    # SC is the event code in the Xpress Lead data
-    sc = 'ACTF1119'
-
-    # EXID is the exhibitor ID
-    exid = '1977893'
-
-    # Email for the account (AKA Michelle)
-    em = 'marketing@waysidepublishing.com'
-
-    term_id = 'D356DF7FA99849B'
-    
-    url = 'https://www.xpressleadpro.com/portal/public/signin/marketing@waysidepublishing.com/1977893/qualifiers'
+    url = 'https://www.xpressleadpro.com/portal/public/signin/ligani@waysidepublishing.com/2182520/qualifiers'
 
     s = requests.Session()
 
     s.get(url)
 
-    download_url = "https://www.xpressleadpro.com/portal/public/downloadbyexid/1977893/csv"
+    download_url = "https://www.xpressleadpro.com/portal/public/downloadbyexid/2182520/csv"
 
     with open(new_fn, 'wb') as out_file:
         data = s.get(download_url)
@@ -78,44 +65,52 @@ def map_from_to(v, n):
 
 
 def handle_headers(header, value):
+    if header == "Level":
+        level_values = {
+            "High School": "426379",
+            "Middle/Jr. High": "426381",
+            "Elementary": "426383",
+            "Elementary,Middle/Jr. High,High School": "426385",
+            'Middle/Jr. High,High School': '426387',
+            'Community College': '426389',
+            'Adult Ed': '426391'
+        }
+        return level_values.get(value, '')
+
     if header == "Languages":
         language_values = {
-            'Spanish': '359661_69529pi_359661_69529_631397',
-            'French': '359661_69529pi_359661_69529_631399',
-            'German': '359661_69529pi_359661_69529_631401',
-            'Italian': '359661_69529pi_359661_69529_631403',
-            'Latin': '359661_69529pi_359661_69529_631405',
-            'Portuguese': '359661_69529pi_359661_69529_631407',
-            'Mandarin': '359661_69529pi_359661_69529_631409',
-            'Japanese': '359661_69529pi_359661_69529_631411',
-            'Hindi': '359661_69529pi_359661_69529_631413',
-            'Arabic': '359661_69529pi_359661_69529_631415',
-            'Russian': '359661_69529pi_359661_69529_631417',
+            'Spanish': '359661_41981pi_359661_41981_426009',
+            'French': '359661_41981pi_359661_41981_426011',
+            'German': '359661_41981pi_359661_41981_426013',
+            'Italian': '359661_41981pi_359661_41981_426015',
+            'Latin': '359661_41981pi_359661_41981_426017',
+            'Portuguese': '359661_41981pi_359661_41981_426019',
+            'Mandarin': '359661_41981pi_359661_41981_426021',
+            'Japanese': '359661_41981pi_359661_41981_426023',
+            'Hindi': '359661_41981pi_359661_41981_426025',
+            'Arabic': '359661_41981pi_359661_41981_426027',
+            'Russian': '359661_41981pi_359661_41981_426029',
         }
 
         return map_from_to(value, language_values)
 
     if header == 'Email 30 day access to these programs':
         digital_values = {
-            'EntreCulturas 1 Spanish': '359661_69471pi_359661_69471_631259',
-            'EntreCulturas 1A Spanish': '359661_69473pi_359661_69473_631261',
-            'EntreCulturas 1B Spanish': '359661_69475pi_359661_69475_631263',
-            'EntreCulturas 2 Spanish': '359661_69477pi_359661_69477_631265',
-            'EntreCulturas 3 Spanish': '359661_69479pi_359661_69479_631267',
-            'EntreCulturas 4 Unit 1 Spanish': '359661_69481pi_359661_69481_631269',
-            'Tejidos': '359661_69483pi_359661_69483_631271',
-            'Triangulo APreciado': '359661_69485pi_359661_69485_631273',
-            'Azulejo': '359661_69487pi_359661_69487_631275',
-            'APprenons': '359661_69499pi_359661_69499_631287',
-            'Neue Blickwinkel German': '359661_69501pi_359661_69501_631289',
-            'Chiarissimo Uno Italian': '359661_69503pi_359661_69503_631291',
-            'Chiarissimo Due Italian': '359661_69505pi_359661_69505_631293',
-            'Scandite Muros Latin': '359661_69507pi_359661_69507_631295',
-            'EntreCultures 1A French': '359661_69489pi_359661_69489_631277',
-            'EntreCultures 1B French': '359661_69491pi_359661_69491_631279',
-            'EntreCultures 1 French': '359661_69493pi_359661_69493_631281',
-            'EntreCultures 2 French': '359661_69495pi_359661_69495_631283',
-            'EntreCultures 3 Unit 1 French': '359661_69497pi_359661_69497_631285' 
+            'EntreCulturas 1 - Spanish': '359661_41915pi_359661_41915_425935',
+            'EntreCulturas 1a - Spanish': '359661_42103pi_359661_42103_426413',
+            'EntreCulturas 1b - Spanish': '359661_42105pi_359661_42105_426415',
+            'EntreCulturas 2 - Spanish': '359661_41917pi_359661_41917_425937',
+            'EntreCulturas 3 - Spanish': '359661_41919pi_359661_41919_425939',
+            'Tejidos': '359661_41921pi_359661_41921_425941',
+            'Triangulo Aprobado': '359661_41923pi_359661_41923_425943',
+            'Triangulo APreciado': '359661_42107pi_359661_42107_426417',
+            'Azulejo': '359661_41925pi_359661_41925_425945',
+            'APprenons': '359661_41927pi_359661_41927_425947',
+            'Neue Blickwinkel': '359661_41929pi_359661_41929_425949',
+            'Chiarissimo Uno': '359661_41931pi_359661_41931_425951',
+            'Chiarissimo Due': '359661_41933pi_359661_41933_425953',
+            'Scandite Muros': '359661_41935pi_359661_41935_425955',
+            'EntreCultures 1 - Unit 1 - French': '359661_42115pi_359661_42115_426425'
 
         }
 
@@ -123,36 +118,95 @@ def handle_headers(header, value):
 
     if header == "Wayside is giving you these print resources now":
         print_values = {
-            'EntreCulturas 4 Print Sample Unit': '359661_69509pi_359661_69509_631297',
-            'EntreCultures 3 Print Sample Unit': '359661_69511pi_359661_69511_631299',
+            'EntreCultures Sampler': '359661_42115pi_359661_42115_426425',
+            'EntreCulturas 1a': '359661_42117pi_359661_42117_426427',
+            'EntreCulturas 1b': '359661_42119pi_359661_42119_426429',
+            'EntreCulturas 1': '359661_41937pi_359661_41937_425957',
+            'EntreCulturas 2': '359661_41939pi_359661_41939_425959',
+            'EntreCulturas 3': '359661_41941pi_359661_41941_425961',
+            'Tejidos': '359661_41943pi_359661_41943_425963',
+            'Triangulo Aprobado': '359661_41945pi_359661_41945_425965',
+            'Triangulo APreciado': '359661_42121pi_359661_42121_426431',
+            'Azulejo': '359661_41947pi_359661_41947_425967',
+            'APprenons': '359661_41949pi_359661_41949_425969',
+            'Neue Blickwinkel': '359661_41951pi_359661_41951_425971',
+            'Chiarissimo Uno': '359661_41953pi_359661_41953_425973',
+            'Chiarissimo Due': '359661_41955pi_359661_41955_425975',
+            'Scandite Muros': '359661_41957pi_359661_41957_425977',
         }
-
         return map_from_to(value, print_values)
 
-    if header == "The next adoption related deadline will be":
+    if header == "Digital tools in your classroom":
+        digital_tools_values = {
+            '1 to 1': '359661_41983pi_359661_41983_426031',
+            '1 to 2 or more': '359661_41983pi_359661_41983_426033',
+            'Technology Cart': '359661_41983pi_359661_41983_426035',
+            'Language Lab': '359661_41983pi_359661_41983_426401'
+        }
+
+        return map_from_to(value, digital_tools_values)
+
+    if header == "The next adoption-related deadline will be":
         deadline_values = {
-            'Before September 2020': '359661_69535pi_359661_69535_632741',
-            'After September 2020': '359661_69535pi_359661_69535_632743',
+            'Before 2019': '359661_41987pi_359661_41987_426393',
+            'Spring 2019': '359661_41987pi_359661_41987_426395',
+            'Spring 2020': '359661_41987pi_359661_41987_426397',
+            'Fall 2019': '359661_41987pi_359661_41987_426399'
         }
 
         return map_from_to(value, deadline_values)
 
     if header == 'Wayside should stay in touch about':
         in_touch_values = {
-            'German 1, 2, 3': '359661_69515pi_359661_69515_631303',
-            'EntreCulturas 4': '359661_69679pi_359661_69679_632745',
-            'Entrecultures 3': '359661_69513pi_359661_69513_631301'
+            'Wayside newsletter subscription': '359661_41959pi_359661_41959_426437',
+            'EntreCultures 123 - Levels 1 and 2 coming 2019': '359661_41963pi_359661_41963_425983',
+            'Updates on EntreCulturas 4 - Spanish': '359661_42127pi_359661_42127_426439',
+            'Updates on German 1, 2, 3': '359661_41965pi_359661_41965_425985',
+            'Learning Site Updates': '359661_42129pi_359661_42129_426441',
         }
 
         return map_from_to(value, in_touch_values)
 
+    if header == 'Post-ACTFL shipment requested':
+        create_values = {
+            'EntreCulturas 1a': '359661_42135pi_359661_42135_426447',
+            'EntreCulturas 1b': '359661_42137pi_359661_42137_426449',
+            'EntreCulturas 1': '359661_42139pi_359661_42139_426451',
+            'EntreCulturas 2': '359661_42141pi_359661_42141_426453',
+            'EntreCulturas 3': '359661_42143pi_359661_42143_426455',
+            'Tejidos': '359661_42145pi_359661_42145_426457',
+            'Triangulo Aprobado': '359661_42147pi_359661_42147_426459',
+            'Triangulo APreciado': '359661_42149pi_359661_42149_426461',
+            'Azulejo': '359661_44005pi_359661_44005_444589',
+            'APprenons': '359661_42153pi_359661_42153_426465',
+            'Neue Blickwinkel': '359661_42155pi_359661_42155_426467',
+            'Chiarissimo Uno': '359661_42157pi_359661_42157_426469',
+            'Chiarissimo Due': '359661_42159pi_359661_42159_426471',
+            'Scandite Muros': '359661_42161pi_359661_42161_426473',
+            'EntreCultures 1 print sampler of unit 1': '359661_44474pi_359661_44474_448870'
+        }
+
+        return map_from_to(value, create_values)
+
+    if header == 'If you had your wish, Wayside would create':
+        sales_values = {
+            'Chiarissimo Tre': '359661_41967pi_359661_41967_425987',
+            'Elementary French': '359661_41969pi_359661_41969_425989',
+            'Elementary German': '359661_41971pi_359661_41971_425991',
+            'Elementary Spanish': '359661_41975pi_359661_41975_425995',
+            'Elementary Mandarin': '359661_42133pi_359661_42133_426445',
+            'Mandarin 1, 2, 3': '359661_41977pi_359661_41977_425997',
+        }
+
+        return map_from_to(value, sales_values)
+
     if header == 'Lead Rating':
         rating_values = {
-            '1': '359661_69543pi_359661_69543_631391',
-            '2': '359661_69543pi_359661_69543_631393',
-            '3': '359661_69543pi_359661_69543_631393',
-            '4': '359661_69543pi_359661_69543_631395',
-            '5': '359661_69543pi_359661_69543_631395'
+            '1': '359661_41993pi_359661_41993_426403',
+            '2': '359661_41993pi_359661_41993_426405',
+            '3': '359661_41993pi_359661_41993_426407',
+            '4': '359661_41993pi_359661_41993_426409',
+            '5': '359661_41993pi_359661_41993_426411'
         }
         return map_from_to(value, rating_values)
 
@@ -161,40 +215,43 @@ def push_data_to(fn, url_pardot):
     with open(fn, 'r') as csvfile:
         reader = csv.DictReader(csvfile)
         headers = reader.fieldnames
-        #update left hand values to match new ACTFL form
         tag_names = {
-            'First Name': '359661_69455pi_359661_69455',
-            'Last Name': '359661_69457pi_359661_69457',
-            'Company': '359661_69463pi_359661_69463',
-            'Street': '359661_69547pi_359661_69547',
-            'Street (line 2)': '359661_69549pi_359661_69549',
-            'City': '359661_69465pi_359661_69465',
-            'State/Province': '359661_69467pi_359661_69467',
-            'Zip Code': '359661_69469pi_359661_69469',
-            'Country': '359661_69551pi_359661_69551',
-            'Phone': '359661_69553pi_359661_69553',
-            'Email': '359661_69459pi_359661_69459',
+            'First Name': '359661_41897pi_359661_41897',
+            'Last Name': '359661_41899pi_359661_41899',
+            'Company': '359661_41903pi_359661_41903',
+            'Street': '359661_41905pi_359661_41905',
+            'Street (line 2)': '359661_41907pi_359661_41907',
+            'City': '359661_41909pi_359661_41909',
+            'State/Province': '359661_41911pi_359661_41911',
+            'Zip Code': '359661_41913pi_359661_41913',
+            'Country': '359661_42097pi_359661_42097',
+            'Phone': '359661_42099pi_359661_42099',
+            'Email': '359661_41901pi_359661_41901',
 
-            'Assignment': '359661_69555pi_359661_69555',
-            'Level': '359661_69557pi_359661_69557',
+            'Assignment': '359661_41979pi_359661_41979',
+            'Level': '359661_42101pi_359661_42101',
 
             'Languages': '',
 
-            'Name of Waysider completing the form': '359661_69677pi_359661_69677',
+            'Name of Waysider completing this form': '359661_42703pi_359661_42703',
 
             'Email 30 day access to these programs': '',
 
-            'The next adoption related deadline will be': '',
+            'Wayside is giving you these print resources now': '',
 
-            'What Learning Management System LMS do you use': '359661_69533pi_359661_69533',
+            'The next adoption-related deadline will be': '',
+
+            'Digital tools in your classroom': '',
 
             'Wayside should stay in touch about': '',
 
-            'Wayside is giving you these print resources now': '',
+            'If you had your wish, Wayside would create': '',
 
-            'OPTIONAL Non sales follow up': '359661_69681pi_359661_69681',
+            'Post-ACTFL shipment requested': '',
 
-            'Notes': '359661_69541pi_359661_69541',
+            'OPTIONAL Non Sales Follow Up': '359661_42705pi_359661_42705',
+
+            'Notes': '359661_41991pi_359661_41991',
 
             'Lead Rating': '',
         }
@@ -207,12 +264,14 @@ def push_data_to(fn, url_pardot):
                 tag_name = tag_names.get(header)
                 if tag_name is not None:
                     value = row[header]
-                    if header in [
+                    if header in ["Level",
                                   "Languages",
                                   "Email 30 day access to these programs",
-                                  "The next adoption related deadline will be",
                                   "Wayside is giving you these print resources now",
+                                  "The next adoption-related deadline will be",
+                                  "Digital tools in your classroom",
                                   "Wayside should stay in touch about",
+                                  "If you had your wish, Wayside would create",
                                   "Lead Rating"]:
                         return_value = handle_headers(header, value)
                         if isinstance(return_value, str):
@@ -258,28 +317,22 @@ def push_data_to_ls(fn, url_ls):
 
                 if header == 'Email 30 day access to these programs':
                     all_textbooks = curr_val.split("|")
-
                     textbook_ids = {
-                        'EntreCulturas 1A Spanish': '9122772',
-                        'EntreCulturas 1B Spanish': '9123315',
-                        'EntreCulturas 1 Spanish': '13463',
-                        'EntreCulturas 2 Spanish': '13507',
-                        'EntreCulturas 3 Spanish': '13518',
-                        'EntreCulturas 4 Unit 1 Spanish': '13338928',
+                        'EntreCulturas 1a - Spanish': '9122772',
+                        'EntreCulturas 1b - Spanish': '9123315',
+                        'EntreCulturas 1 - Spanish': '13463',
+                        'EntreCulturas 2 - Spanish': '13507',
+                        'EntreCulturas 3 - Spanish': '13518',
                         'Tejidos': '1955',
                         'Triangulo Aprobado': '3551',
                         'Triangulo APreciado': '6250713',
                         'Azulejo': '3',
                         'APprenons': '11138',
-                        'Neue Blickwinkel German': '12741',
-                        'Chiarissimo Uno Italian': '6698',
-                        'Chiarissimo Due Italian': '12271',
-                        'Scandite Muros Latin': '13435',
-                        'EntreCultures 1A French': '12730537',
-                        'EntreCultures 1B French': '12730581',
-                        'EntreCultures 1 French': '9330042',
-                        'EntreCultures 2 French': '8404114',
-                        'EntreCultures 3 Unit 1 French': '13486602'
+                        'Neue Blickwinkel': '12741',
+                        'Chiarissimo Uno': '6698',
+                        'Chiarissimo Due': '12271',
+                        'Scandite Muros': '13435',
+                        'EntreCultures 1 - Unit 1 - French': '4627944'
                     }
 
                     for t in all_textbooks:
@@ -364,7 +417,7 @@ def main():
             parsed_data_fn = get_just_new_data_from()
 
             # Push data to Pardot
-            push_data_to(parsed_data_fn, 'http://www2.waysidepublishing.com/l/359661/2019-11-05/l8tm6s')
+            push_data_to(parsed_data_fn, 'http://www2.waysidepublishing.com/l/359661/2018-10-22/dn4z2b')
 
             # Push data to the LS
             push_data_to_ls(parsed_data_fn, 'https://learningsite.waysidepublishing.com/api/user/')
