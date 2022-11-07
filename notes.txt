@@ -1,2 +1,1 @@
-349 lines in dummy archive last line "okochurova"
-429 lines in dummy archive last line "alice.pieschel"
+Changed 2022 model to submit via multipart formdata for Pardot, was JSON in previous years but stopped working for whatever reason.

@@ -1,4 +1,3 @@
-import urllib.request
 import datetime
 import requests
 import os
@@ -7,6 +6,7 @@ import csv
 import json
 import sys
 from pprint import pprint
+from .constants import *
 
 # Global varibles
 new_fn = "new_data.csv"
@@ -73,23 +73,10 @@ def map_from_to(v, n):
 
 def handle_headers(header, value):
     if header == "The next adoption-related deadline will be":
-        deadline_values = {
-            "Before September 2023": "359661_164340pi_359661_164340_1809576",
-            "After September 2023": "359661_164340pi_359661_164340_1809579",
-        }
-
-        return map_from_to(value, deadline_values)
+        return map_from_to(value, DEADLINE_VALUES)
 
     if header == "Lead Rating":
-        lead_values = {
-            "1": "359661_164415pi_359661_164415_1809738",
-            "2": "359661_164415pi_359661_164415_1809735",
-            "3": "359661_164415pi_359661_164415_1809735",
-            "4": "359661_164415pi_359661_164415_1809732",
-            "5": "359661_164415pi_359661_164415_1809732",
-        }
-
-        return map_from_to(value, lead_values)
+        return map_from_to(value, LEADS_VALUES)
 
 
 """
@@ -134,15 +121,15 @@ def push_data_to(fn, url_pardot):
         reader = csv.DictReader(csvfile)
         headers = reader.fieldnames
         tag_names = {
-            "First Name": "359661_164319pi_359661_164319",
-            "Last Name": "359661_164322pi_359661_164322",
-            "Email": "359661_164325pi_359661_164325",
-            "State/Province": "359661_164337pi_359661_164337",
-            "Company": "359661_164328pi_359661_164328",
-            "Adoption Date": "359661_98521pi_359661_98521",
-            "Add Title": "359661_164403pi_359661_164403",
-            "What Learning Management System LMS do you use": "359661_164409pi_359661_164409",
-            "Name of Waysider completing the form": "359661_164412pi_359661_164412",
+            "First Name": FIRST_NAME_FIELD_ID,
+            "Last Name": LAST_NAME_FIELD_ID,
+            "Email": EMAIL_FIELD_ID,
+            "State/Province": STATE_FIELD_ID,
+            "Company": COMPANY_FIELD_ID,
+            "Adoption Date": ADOPTION_DATE,
+            "Add Title": ADD_TITLE_FIELD_ID,
+            "What Learning Management System LMS do you use": WHAT_LMS_FIELD_ID,
+            "Name of Waysider completing the form": WAYSIDER_COMPLETING_FIELD_ID,
             "What program do you currently use": "",
             "Does your school or district use": "",
             "NOTES (Q11)": "",
@@ -151,13 +138,12 @@ def push_data_to(fn, url_pardot):
         }
 
         all_data = []
-        COMMENT_ID = "359661_164418pi_359661_164418"
 
         for row in reader:
             pardot_data = {
                 # Lead Source: Conferences
-                "359661_164406pi_359661_164406": "1809660",
-                COMMENT_ID: "",
+                LEAD_SOURCES_FIELD_ID: "1809660",
+                COMMENT_ID_FIELD_ID: "",
             }
             for header in headers:
                 tag_name = tag_names.get(header)
@@ -178,12 +164,20 @@ def push_data_to(fn, url_pardot):
                         in [
                             "What program do you currently use",
                             "Does your school or district use",
-                            "NOTES (Q11)",
+                            XPRESS_LEADS_NOTES_FIELD,
                         ]
                         and value != ""
                     ):
-                        pardot_data[COMMENT_ID] = (
-                            pardot_data[COMMENT_ID] + header + ": \n " + value + "\n"
+                        # makes the SF notes more readable
+                        pretext = (
+                            "Notes" if header == XPRESS_LEADS_NOTES_FIELD else header
+                        )
+                        pardot_data[COMMENT_ID_FIELD_ID] = (
+                            pardot_data[COMMENT_ID_FIELD_ID]
+                            + pretext
+                            + ": \n "
+                            + value
+                            + "\n"
                         )
                     else:
                         pardot_data[tag_name] = value
@@ -213,7 +207,7 @@ def push_data_to_ls(fn, url_ls):
 
         for row in reader:
             data = {
-                "key": "EOQ89SMVP3K",
+                "key": LS_POST_KEY,
                 "campaign": "email",
                 "textbook": [],
                 "email": "",
@@ -229,31 +223,9 @@ def push_data_to_ls(fn, url_ls):
                 curr_val = row[header]
                 if header == "Email 30 day access to these programs":
                     all_textbooks = curr_val.split("|")
-                    textbook_ids = {
-                        "EntreCulturas 1A Spanish": "9122772",
-                        "EntreCulturas 1B Spanish": "9123315",
-                        "EntreCulturas 1 Spanish": "13463",
-                        "EntreCulturas 2 Spanish": "13507",
-                        "EntreCulturas 3 Spanish": "13518",
-                        "EntreCulturas 4 Unit 1 Spanish": "12668950",
-                        "Tejidos": "1955",
-                        "Triangulo Aprobado": "3551",
-                        "Triangulo APreciado": "6250713",
-                        "Azulejo": "3",
-                        "EntreCultures 1A French": "12730537",
-                        "EntreCultures 1B French": "12730581",
-                        "EntreCultures 1 French": "9330042",
-                        "EntreCultures 2 French": "8404114",
-                        "EntreCultures 3 Unit 1 French": "12941687",
-                        "APprenons": "11138",
-                        "Neue Blickwinkel German": "12741",
-                        "Chiarissimo Uno Italian": "6698",
-                        "Chiarissimo Due Italian": "12271",
-                        "Scandite Muros Latin": "13435",
-                    }
 
                     for t in all_textbooks:
-                        curr_id = textbook_ids.get(t)
+                        curr_id = TEXTBOOK_ID_MAP.get(t)
                         if curr_id != None and curr_id.strip() != "":
                             data["textbook"].append(curr_id)
 
@@ -349,11 +321,11 @@ def main():
             # Push data to Pardot
             push_data_to(
                 parsed_data_fn,
-                "https://www2.waysidepublishing.com/l/359661/2022-11-04/296jkw4",
+                PARDOT_FORM_URL,
             )
 
             # Push data to the LS
-            # push_data_to_ls(parsed_data_fn, 'https://learningsite.waysidepublishing.com/api/user-campaign/')
+            # push_data_to_ls(parsed_data_fn, LS_POST_URL)
 
             # Deleting "archive.csv" and "delta.csv" if necessary, renames "new_data.csv" to "archive.csv"
             cleanup(0)

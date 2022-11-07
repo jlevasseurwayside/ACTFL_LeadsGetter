@@ -1,6 +1,7 @@
 import urllib.request
+from .constants import *
 
-url = 'https://www.xpressleadpro.com/portal/public/signin/smillette@waysidepublishing.com/1894511/qualifiers'
+url = SIGNIN_URL
 
 with urllib.request.urlopen(url) as response:
     print(response.getcode())
