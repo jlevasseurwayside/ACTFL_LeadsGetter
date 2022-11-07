@@ -1,7 +1,7 @@
 import urllib.request
-from .constants import *
+from constants import constants
 
-url = SIGNIN_URL
+url = constants.SIGNIN_URL
 
 with urllib.request.urlopen(url) as response:
     print(response.getcode())

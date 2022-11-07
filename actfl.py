@@ -6,7 +6,7 @@ import csv
 import json
 import sys
 from pprint import pprint
-from .constants import *
+from constants import constants
 
 # Global varibles
 new_fn = "new_data.csv"
@@ -57,32 +57,49 @@ def get_just_new_data_from():
         return delta_fn
 
 
+CHECKBOX_FIELDTYPE = "checkbox"
+DROPDOWN_FIELDTYPE = "dropdown"
 # this method maps Xpress Lead answer's form value to the form name
-# we take the initial field id and add the select id to at the end, this is done manually in the maps in constants
-# field id = 359661_164409pi_359661_164409, select id = 12345, the value for curr_tag_name is 359661_164409pi_359661_164409_12345
-# we chop off the select id and then that is the value we add to ret_val
-def map_from_to(v, n):
+# we handle the splitting of checkboxes differently to dropdowns
+def map_from_to(v, n, fieldtype):
     all_val = v.split("|")
     ret_val = {}
 
     for v in all_val:
         curr_tag_name = n.get(v)
-        if curr_tag_name != None:
-            if curr_tag_name != "":
-                ret_val[curr_tag_name] = curr_tag_name.split("_")[-1]
+        if curr_tag_name != None and curr_tag_name != "":
+            tag_pieces = curr_tag_name.split("_")
+            new_key = (
+                curr_tag_name
+                if fieldtype == CHECKBOX_FIELDTYPE
+                else "_".join(tag_pieces[0:4])
+            )
+            ret_val[new_key] = tag_pieces[-1]
 
     return ret_val
 
 
-def handle_headers(header, value):
+def handle_multioption_headers(header, value):
     if header == "The next adoption-related deadline will be":
-        return map_from_to(value, DEADLINE_VALUES)
+        return map_from_to(value, constants.DEADLINE_VALUES, DROPDOWN_FIELDTYPE)
 
     if header == "Lead Rating":
-        return map_from_to(value, LEADS_VALUES)
+        return map_from_to(value, constants.LEADS_VALUES, DROPDOWN_FIELDTYPE)
 
     if header == "What Learning Management System LMS do you use":
-        return map_from_to(value, LMS_VALUES)
+        return map_from_to(value, constants.LMS_VALUES, DROPDOWN_FIELDTYPE)
+
+    if header == "Wayside should stay in touch about":
+        return map_from_to(value, constants.STAY_IN_TOUCH_VALUES, CHECKBOX_FIELDTYPE)
+
+    if header == "Email 30 day access to these programs":
+        return map_from_to(value, constants.DIGITAL_VALUES, CHECKBOX_FIELDTYPE)
+
+    if header == "Wayside is giving you these print resources now":
+        return map_from_to(value, constants.PRINT_VALUES, CHECKBOX_FIELDTYPE)
+
+    if header == "Post ACTFL shipment requested":
+        return map_from_to(value, constants.SHIP_VALUES, CHECKBOX_FIELDTYPE)
 
 
 def multipartify(data, parent_key=None, formatter: callable = None) -> dict:
@@ -108,25 +125,35 @@ def multipartify(data, parent_key=None, formatter: callable = None) -> dict:
     return dict(converted)
 
 
-def push_data_to(fn, url_pardot):
+def push_data_to_pardot(fn):
     with open(fn, "r") as csvfile:
         reader = csv.DictReader(csvfile)
         headers = reader.fieldnames
         tag_names = {
-            "First Name": FIRST_NAME_FIELD_ID,
-            "Last Name": LAST_NAME_FIELD_ID,
-            "Email": EMAIL_FIELD_ID,
-            "State/Province": STATE_FIELD_ID,
-            "Company": COMPANY_FIELD_ID,
-            "Adoption Date": ADOPTION_DATE,
-            "Add Title": ADD_TITLE_FIELD_ID,
-            "What Learning Management System LMS do you use": WHAT_LMS_FIELD_ID,
-            "Name of Waysider completing the form": WAYSIDER_COMPLETING_FIELD_ID,
+            "First Name": constants.FIRST_NAME_FIELD_ID,
+            "Last Name": constants.LAST_NAME_FIELD_ID,
+            "Email": constants.EMAIL_FIELD_ID,
+            "Company": constants.COMPANY_FIELD_ID,
+            "Adoption Date": constants.ADOPTION_DATE,
+            "Add Title": constants.ADD_TITLE_FIELD_ID,
+            "What Learning Management System LMS do you use": constants.WHAT_LMS_FIELD_ID,
+            "Name of Waysider completing the form": constants.WAYSIDER_COMPLETING_FIELD_ID,
+            # shipping
+            "Address 1": constants.ADDRESS_1_FIELD_ID,
+            "Address 2": constants.ADDRESS_2_FIELD_ID,
+            "City": constants.CITY_FIELD_ID,
+            "Zip Code": constants.ZIP_FIELD_ID,
+            "Country": constants.COUNTRY_FIELD_ID,
+            constants.XPRESS_LEADS_STATE_FIELD: "",
+            # blank values are handled by handle_multioption_headers or tacked on to Comment ID feild
             "What program do you currently use": "",
             "Does your school or district use": "",
             "NOTES (Q11)": "",
             "The next adoption-related deadline will be": "",
             "Lead Rating": "",
+            "Email 30 day access to these programs": "",
+            "Wayside is giving you these print resources now": "",
+            "Post ACTFL shipment requested": "",
         }
 
         all_data = []
@@ -134,8 +161,8 @@ def push_data_to(fn, url_pardot):
         for row in reader:
             pardot_data = {
                 # Lead Source: Conferences
-                LEAD_SOURCES_FIELD_ID: "1809660",
-                COMMENT_ID_FIELD_ID: "",
+                constants.LEAD_SOURCES_FIELD_ID: "1809660",
+                constants.COMMENT_FIELD_ID: "",
             }
             for header in headers:
                 tag_name = tag_names.get(header)
@@ -146,7 +173,7 @@ def push_data_to(fn, url_pardot):
                         # "What Learning Management System LMS do you use",
                         "Lead Rating",
                     ]:
-                        return_value = handle_headers(header, value)
+                        return_value = handle_multioption_headers(header, value)
                         if isinstance(return_value, str):
                             pardot_data[tag_name] = return_value
                         else:
@@ -156,21 +183,28 @@ def push_data_to(fn, url_pardot):
                         in [
                             "What program do you currently use",
                             "Does your school or district use",
-                            XPRESS_LEADS_NOTES_FIELD,
+                            constants.XPRESS_LEADS_NOTES_FIELD,
                         ]
                         and value != ""
                     ):
                         # makes the SF notes more readable
                         pretext = (
-                            "Notes" if header == XPRESS_LEADS_NOTES_FIELD else header
+                            "Notes"
+                            if header == constants.XPRESS_LEADS_NOTES_FIELD
+                            else header
                         )
-                        pardot_data[COMMENT_ID_FIELD_ID] = (
-                            pardot_data[COMMENT_ID_FIELD_ID]
+                        pardot_data[constants.COMMENT_FIELD_ID] = (
+                            pardot_data[constants.COMMENT_FIELD_ID]
                             + pretext
                             + ": \n "
                             + value
                             + "\n"
                         )
+                    elif header == constants.XPRESS_LEADS_STATE_FIELD:
+                        try:
+                            pardot_data[tag_name] = constants.STATE_MAP[value]
+                        except KeyError:
+                            pass
                     else:
                         pardot_data[tag_name] = value
             all_data.append(pardot_data)
@@ -182,16 +216,16 @@ def push_data_to(fn, url_pardot):
             + " Filling out Pardot form... \n"
         )
         for data in all_data:
-            if data[COMMENT_ID] == "":
+            if data[constants.COMMENT_FIELD_ID] == "":
                 continue
             log("%s/%s users\n" % (curr_data, len(all_data)))
-            r = requests.post(url_pardot, files=multipartify(data))
+            r = requests.post(constants.PARDOT_FORM_URL, files=multipartify(data))
             pprint(str(r.content).count("This field is required."))
             log("Successfully finished.\n")
             curr_data += 1
 
 
-def push_data_to_ls(fn, url_ls):
+def push_data_to_ls(fn):
     with open(fn, "r") as csvfile:
         all_data = []
         reader = csv.DictReader(csvfile)
@@ -217,7 +251,7 @@ def push_data_to_ls(fn, url_ls):
                     all_textbooks = curr_val.split("|")
 
                     for t in all_textbooks:
-                        curr_id = TEXTBOOK_ID_MAP.get(t)
+                        curr_id = constants.TEXTBOOK_ID_MAP.get(t)
                         if curr_id != None and curr_id.strip() != "":
                             data["textbook"].append(curr_id)
 
@@ -256,7 +290,7 @@ def push_data_to_ls(fn, url_ls):
             continue
         log("%s/%s users\n" % (curr_d, len(all_data)))
         headers = {"Content-Type": "application/json", "Accept": "application/json"}
-        r = requests.post(url_ls, data=json.dumps(d), headers=headers)
+        r = requests.post(constants.LS_POST_URL, data=json.dumps(d), headers=headers)
         log("Successfully finished.\n")
         print(r.text)
         curr_d += 1
@@ -310,14 +344,9 @@ def main():
             # Returns file name to process
             parsed_data_fn = get_just_new_data_from()
 
-            # Push data to Pardot
-            push_data_to(
-                parsed_data_fn,
-                PARDOT_FORM_URL,
-            )
+            push_data_to_pardot(parsed_data_fn)
 
-            # Push data to the LS
-            # push_data_to_ls(parsed_data_fn, LS_POST_URL)
+            # push_data_to_ls(parsed_data_fn)
 
             # Deleting "archive.csv" and "delta.csv" if necessary, renames "new_data.csv" to "archive.csv"
             cleanup(0)
