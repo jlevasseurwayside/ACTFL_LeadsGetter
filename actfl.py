@@ -58,6 +58,9 @@ def get_just_new_data_from():
 
 
 # this method maps Xpress Lead answer's form value to the form name
+# we take the initial field id and add the select id to at the end, this is done manually in the maps in constants
+# field id = 359661_164409pi_359661_164409, select id = 12345, the value for curr_tag_name is 359661_164409pi_359661_164409_12345
+# we chop off the select id and then that is the value we add to ret_val
 def map_from_to(v, n):
     all_val = v.split("|")
     ret_val = {}
@@ -78,19 +81,8 @@ def handle_headers(header, value):
     if header == "Lead Rating":
         return map_from_to(value, LEADS_VALUES)
 
-
-"""
-    #359661_164409pi_359661_164409
     if header == "What Learning Management System LMS do you use":
-        deadline_values = {
-            'Before 2019': '359661_41987pi_359661_41987_426393',
-            'Spring 2019': '359661_41987pi_359661_41987_426395',
-            'Spring 2020': '359661_41987pi_359661_41987_426397',
-            'Fall 2019': '359661_41987pi_359661_41987_426399'
-        }
-
-        return map_from_to(value, deadline_values)
-"""
+        return map_from_to(value, LMS_VALUES)
 
 
 def multipartify(data, parent_key=None, formatter: callable = None) -> dict:
