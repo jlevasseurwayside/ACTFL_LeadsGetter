@@ -80,25 +80,25 @@ def map_from_to(v, n, fieldtype):
 
 
 def handle_multioption_headers(header, value):
-    if header == "The next adoption-related deadline will be":
+    if header == constants.ADOPTION_DEADLINE_XPRESS_LEADS_HEADER:
         return map_from_to(value, constants.DEADLINE_VALUES, DROPDOWN_FIELDTYPE)
 
-    if header == "Lead Rating":
+    if header == constants.LEAD_RATING_XPRESS_LEADS_HEADER:
         return map_from_to(value, constants.LEADS_VALUES, DROPDOWN_FIELDTYPE)
 
-    if header == "What Learning Management System LMS do you use":
+    if header == constants.WHAT_LMS_XPRESS_LEADS_HEADER:
         return map_from_to(value, constants.LMS_VALUES, DROPDOWN_FIELDTYPE)
 
-    if header == "Wayside should stay in touch about":
+    if header == constants.STAY_IN_TOUCH_XPRESS_LEADS_HEADER:
         return map_from_to(value, constants.STAY_IN_TOUCH_VALUES, CHECKBOX_FIELDTYPE)
 
-    if header == "Email 30 day access to these programs":
+    if header == constants.EMAIL_30_DAY_XPRESS_LEADS_HEADER:
         return map_from_to(value, constants.DIGITAL_VALUES, CHECKBOX_FIELDTYPE)
 
-    if header == "Wayside is giving you these print resources now":
+    if header == constants.WAYSIDE_PRINT_XPRESS_LEADS_HEADER:
         return map_from_to(value, constants.PRINT_VALUES, CHECKBOX_FIELDTYPE)
 
-    if header == "Post ACTFL shipment requested":
+    if header == constants.POST_ACTFL_XPRESS_LEADS_HEADER:
         return map_from_to(value, constants.SHIP_VALUES, CHECKBOX_FIELDTYPE)
 
 
@@ -130,30 +130,30 @@ def push_data_to_pardot(fn):
         reader = csv.DictReader(csvfile)
         headers = reader.fieldnames
         tag_names = {
-            "First Name": constants.FIRST_NAME_FIELD_ID,
-            "Last Name": constants.LAST_NAME_FIELD_ID,
-            "Email": constants.EMAIL_FIELD_ID,
-            "Company": constants.COMPANY_FIELD_ID,
-            "Adoption Date": constants.ADOPTION_DATE,
-            "Add Title": constants.ADD_TITLE_FIELD_ID,
-            "What Learning Management System LMS do you use": constants.WHAT_LMS_FIELD_ID,
-            "Name of Waysider completing the form": constants.WAYSIDER_COMPLETING_FIELD_ID,
+            constants.FIRST_NAME_XPRESS_LEADS_HEADER: constants.FIRST_NAME_FIELD_ID,
+            constants.LAST_NAME_XPRESS_LEADS_HEADER: constants.LAST_NAME_FIELD_ID,
+            constants.EMAIL_XPRESS_LEADS_HEADER: constants.EMAIL_FIELD_ID,
+            constants.COMPANY_XPRESS_LEADS_HEADER: constants.COMPANY_FIELD_ID,
+            constants.ADD_TITLE_XPRESS_LEADS_HEADER: constants.ADD_TITLE_FIELD_ID,
+            constants.WHAT_LMS_XPRESS_LEADS_HEADER: constants.WHAT_LMS_FIELD_ID,
+            constants.NAME_OF_WAYSIDER_XPRESS_LEADS_HEADER: constants.WAYSIDER_COMPLETING_FIELD_ID,
             # shipping
-            "Address 1": constants.ADDRESS_1_FIELD_ID,
-            "Address 2": constants.ADDRESS_2_FIELD_ID,
-            "City": constants.CITY_FIELD_ID,
-            "Zip Code": constants.ZIP_FIELD_ID,
-            "Country": constants.COUNTRY_FIELD_ID,
-            constants.XPRESS_LEADS_STATE_FIELD: "",
+            constants.ADDRESS_1_XPRESS_LEADS_HEADER: constants.ADDRESS_1_FIELD_ID,
+            constants.ADDRESS_2_XPRESS_LEADS_HEADER: constants.ADDRESS_2_FIELD_ID,
+            constants.CITY_XPRESS_LEADS_HEADER: constants.CITY_FIELD_ID,
+            constants.ZIP_XPRESS_LEADS_HEADER: constants.ZIP_FIELD_ID,
+            constants.COUNTRY_XPRESS_LEADS_HEADER: constants.COUNTRY_FIELD_ID,
+            constants.STATE_XPRESS_LEADS_HEADER: constants.STATE_FIELD_ID,
             # blank values are handled by handle_multioption_headers or tacked on to Comment ID feild
-            "What program do you currently use": "",
-            "Does your school or district use": "",
-            "NOTES (Q11)": "",
-            "The next adoption-related deadline will be": "",
-            "Lead Rating": "",
-            "Email 30 day access to these programs": "",
-            "Wayside is giving you these print resources now": "",
-            "Post ACTFL shipment requested": "",
+            constants.WHAT_PROGRAM_XPRESS_LEADS_HEADER: "",
+            constants.DOES_YOUR_SCHOOL_XPRESS_LEADS_HEADER: "",
+            constants.NOTES_XPRESS_LEADS_HEADER: "",
+            constants.ADOPTION_DEADLINE_XPRESS_LEADS_HEADER: "",
+            constants.LEAD_RATING_XPRESS_LEADS_HEADER: "",
+            constants.EMAIL_30_DAY_XPRESS_LEADS_HEADER: "",
+            constants.WAYSIDE_PRINT_XPRESS_LEADS_HEADER: "",
+            constants.POST_ACTFL_XPRESS_LEADS_HEADER: "",
+            constants.STAY_IN_TOUCH_XPRESS_LEADS_HEADER: "",
         }
 
         all_data = []
@@ -169,9 +169,13 @@ def push_data_to_pardot(fn):
                 if tag_name != None:
                     value = row[header]
                     if header in [
-                        "The next adoption-related deadline will be",
-                        # "What Learning Management System LMS do you use",
-                        "Lead Rating",
+                        constants.ADOPTION_DEADLINE_XPRESS_LEADS_HEADER,
+                        constants.WHAT_LMS_XPRESS_LEADS_HEADER,
+                        constants.LEAD_RATING_XPRESS_LEADS_HEADER,
+                        constants.STAY_IN_TOUCH_XPRESS_LEADS_HEADER,
+                        constants.EMAIL_30_DAY_XPRESS_LEADS_HEADER,
+                        constants.WAYSIDE_PRINT_XPRESS_LEADS_HEADER,
+                        constants.POST_ACTFL_XPRESS_LEADS_HEADER,
                     ]:
                         return_value = handle_multioption_headers(header, value)
                         if isinstance(return_value, str):
@@ -181,16 +185,16 @@ def push_data_to_pardot(fn):
                     elif (
                         header
                         in [
-                            "What program do you currently use",
-                            "Does your school or district use",
-                            constants.XPRESS_LEADS_NOTES_FIELD,
+                            constants.WHAT_PROGRAM_XPRESS_LEADS_HEADER,
+                            constants.DOES_YOUR_SCHOOL_XPRESS_LEADS_HEADER,
+                            constants.NOTES_XPRESS_LEADS_HEADER,
                         ]
                         and value != ""
                     ):
                         # makes the SF notes more readable
                         pretext = (
                             "Notes"
-                            if header == constants.XPRESS_LEADS_NOTES_FIELD
+                            if header == constants.NOTES_XPRESS_LEADS_HEADER
                             else header
                         )
                         pardot_data[constants.COMMENT_FIELD_ID] = (
@@ -200,7 +204,7 @@ def push_data_to_pardot(fn):
                             + value
                             + "\n"
                         )
-                    elif header == constants.XPRESS_LEADS_STATE_FIELD:
+                    elif header == constants.STATE_XPRESS_LEADS_HEADER:
                         try:
                             pardot_data[tag_name] = constants.STATE_MAP[value]
                         except KeyError:
@@ -216,11 +220,12 @@ def push_data_to_pardot(fn):
             + " Filling out Pardot form... \n"
         )
         for data in all_data:
+            pprint(data)
             if data[constants.COMMENT_FIELD_ID] == "":
                 continue
             log("%s/%s users\n" % (curr_data, len(all_data)))
             r = requests.post(constants.PARDOT_FORM_URL, files=multipartify(data))
-            pprint(str(r.content).count("This field is required."))
+            print(r.content)
             log("Successfully finished.\n")
             curr_data += 1
 
@@ -233,7 +238,7 @@ def push_data_to_ls(fn):
 
         for row in reader:
             data = {
-                "key": LS_POST_KEY,
+                "key": constants.LS_POST_KEY,
                 "campaign": "email",
                 "textbook": [],
                 "email": "",
@@ -247,7 +252,7 @@ def push_data_to_ls(fn):
 
             for header in headers:
                 curr_val = row[header]
-                if header == "Email 30 day access to these programs":
+                if header == constants.EMAIL_30_DAY_XPRESS_LEADS_HEADER:
                     all_textbooks = curr_val.split("|")
 
                     for t in all_textbooks:
@@ -255,28 +260,28 @@ def push_data_to_ls(fn):
                         if curr_id != None and curr_id.strip() != "":
                             data["textbook"].append(curr_id)
 
-                if header == "Email":
+                if header == constants.EMAIL_XPRESS_LEADS_HEADER:
                     if "cdsreg" in curr_val:
                         data["email"] = "jlevdev@gmail.com"
                     else:
                         data["email"] = curr_val
 
-                if header == "First Name":
+                if header == constants.FIRST_NAME_XPRESS_LEADS_HEADER:
                     data["firstname"] = curr_val
 
-                if header == "Last Name":
+                if header == constants.LAST_NAME_XPRESS_LEADS_HEADER:
                     data["lastname"] = curr_val
 
-                if header == "Company":
+                if header == constants.COMPANY_XPRESS_LEADS_HEADER:
                     data["school"] = curr_val
 
-                if header == "City":
+                if header == constants.CITY_XPRESS_LEADS_HEADER:
                     data["city"] = curr_val
 
-                if header == "State/Province":
+                if header == constants.STATE_XPRESS_LEADS_HEADER:
                     data["state"] = curr_val
 
-                if header == "Zip Code":
+                if header == constants.ZIP_XPRESS_LEADS_HEADER:
                     data["zipCode"] = curr_val
 
             all_data.append(data)
