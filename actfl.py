@@ -9,7 +9,7 @@ from pprint import pprint
 from constants import constants
 
 # Global varibles
-cwd = os.getcwd()
+cwd = os.path.realpath(__file__)
 new_fn = os.path.join(cwd, "new_data.csv")
 old_fn = os.path.join(cwd, "archive.csv")
 delta_fn = os.path.join(cwd, "delta.csv")
@@ -302,7 +302,7 @@ def push_data_to_ls(fn):
         headers = {"Content-Type": "application/json", "Accept": "application/json"}
         r = requests.post(constants.LS_POST_URL, data=json.dumps(d), headers=headers)
         log("Successfully finished.\n")
-        print(r.text)
+        # print(r.text)
         curr_d += 1
 
 
