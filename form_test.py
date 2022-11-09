@@ -5,7 +5,7 @@ values = [
     {
         constants.FIRST_NAME_FIELD_ID: "WOW",
         constants.LAST_NAME_FIELD_ID: "Wong",
-        constants.OMPANY_FIELD_ID: "Super Cool Company",
+        constants.COMPANY_FIELD_ID: "Super Cool Company",
         constants.EMAIL_FIELD_ID: "asdfgh@testing.com",
     },
     {

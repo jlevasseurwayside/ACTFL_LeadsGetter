@@ -149,7 +149,7 @@ def push_data_to_pardot(fn):
             constants.DOES_YOUR_SCHOOL_XPRESS_LEADS_HEADER: "",
             constants.NOTES_XPRESS_LEADS_HEADER: "",
             constants.ADOPTION_DEADLINE_XPRESS_LEADS_HEADER: "",
-            constants.LEAD_RATING_XPRESS_LEADS_HEADER: "",
+            # constants.LEAD_RATING_XPRESS_LEADS_HEADER: "",
             constants.EMAIL_30_DAY_XPRESS_LEADS_HEADER: "",
             constants.WAYSIDE_PRINT_XPRESS_LEADS_HEADER: "",
             constants.POST_ACTFL_XPRESS_LEADS_HEADER: "",
@@ -197,11 +197,14 @@ def push_data_to_pardot(fn):
                             if header == constants.NOTES_XPRESS_LEADS_HEADER
                             else header
                         )
+                        pretty_value = (
+                            ", ".join(value.split("|")) if "|" in value else value
+                        )
                         pardot_data[constants.COMMENT_FIELD_ID] = (
                             pardot_data[constants.COMMENT_FIELD_ID]
                             + pretext
                             + ": \n "
-                            + value
+                            + pretty_value
                             + "\n"
                         )
                     elif header == constants.STATE_XPRESS_LEADS_HEADER:
@@ -261,6 +264,7 @@ def push_data_to_ls(fn):
                             data["textbook"].append(curr_id)
 
                 if header == constants.EMAIL_XPRESS_LEADS_HEADER:
+                    # for testing email invites
                     if "cdsreg" in curr_val:
                         data["email"] = "jlevdev@gmail.com"
                     else:
