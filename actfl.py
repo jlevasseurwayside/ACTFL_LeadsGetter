@@ -14,6 +14,8 @@ new_fn = os.path.join(cwd, "new_data.csv")
 old_fn = os.path.join(cwd, "archive.csv")
 delta_fn = os.path.join(cwd, "delta.csv")
 lock_fn = os.path.join(cwd, "lock.txt")
+cronlog_fn = os.path.join(cwd, "cronlog.txt")
+log_fn = os.path.join(cwd, "log.txt")
 # Debug variables
 debug_remove_archive = False
 
@@ -307,13 +309,13 @@ def push_data_to_ls(fn):
 
 
 def log(text):
-    append_log = open("log.txt", "a+")
+    append_log = open(log_fn, "a+")
     append_log.write(text)
     append_log.close()
 
 
 def cron_log(text):
-    with open("cronlog.txt", "a+") as c_log:
+    with open(cronlog_fn, "a+") as c_log:
         if text:
             c_log.write(text)
         else:
