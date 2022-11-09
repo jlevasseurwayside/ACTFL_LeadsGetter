@@ -9,7 +9,7 @@ from pprint import pprint
 from constants import constants
 
 # Global varibles
-cwd = os.path.realpath(__file__)
+cwd = os.path.dirname(os.path.realpath(__file__))
 new_fn = os.path.join(cwd, "new_data.csv")
 old_fn = os.path.join(cwd, "archive.csv")
 delta_fn = os.path.join(cwd, "delta.csv")
