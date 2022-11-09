@@ -14,7 +14,7 @@ old_fn = "archive.csv"
 delta_fn = "delta.csv"
 lock_fn = "lock.txt"
 # Debug variables
-debug_remove_archive = True
+debug_remove_archive = False
 
 
 def get_conf_data():
