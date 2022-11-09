@@ -9,10 +9,11 @@ from pprint import pprint
 from constants import constants
 
 # Global varibles
-new_fn = "new_data.csv"
-old_fn = "archive.csv"
-delta_fn = "delta.csv"
-lock_fn = "lock.txt"
+cwd = os.getcwd()
+new_fn = os.path.join(cwd, "new_data.csv")
+old_fn = os.path.join(cwd, "archive.csv")
+delta_fn = os.path.join(cwd, "delta.csv")
+lock_fn = os.path.join(cwd, "lock.txt")
 # Debug variables
 debug_remove_archive = False
 
@@ -223,12 +224,12 @@ def push_data_to_pardot(fn):
             + " Filling out Pardot form... \n"
         )
         for data in all_data:
-            pprint(data)
+            # pprint(data)
             if data[constants.COMMENT_FIELD_ID] == "":
                 continue
             log("%s/%s users\n" % (curr_data, len(all_data)))
             r = requests.post(constants.PARDOT_FORM_URL, files=multipartify(data))
-            print(r.content)
+            # print(r.content)
             log("Successfully finished.\n")
             curr_data += 1
 
@@ -355,7 +356,7 @@ def main():
 
             push_data_to_pardot(parsed_data_fn)
 
-            # push_data_to_ls(parsed_data_fn)
+            push_data_to_ls(parsed_data_fn)
 
             # Deleting "archive.csv" and "delta.csv" if necessary, renames "new_data.csv" to "archive.csv"
             cleanup(0)
