@@ -3,3 +3,4 @@ lock.txt
 cronlog.txt
 .vscode
 new_data.csv
+.DS_Store
