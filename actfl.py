@@ -230,7 +230,6 @@ def push_data_to_pardot(fn):
             if data[constants.COMMENT_FIELD_ID] == "":
                 continue
             log("%s/%s users\n" % (curr_data, len(all_data)))
-            log(data[constants.EMAIL_XPRESS_LEADS_HEADER] + "\n")
             r = requests.post(constants.PARDOT_FORM_URL, files=multipartify(data))
             # print(r.content)
             log("Successfully finished.\n")
@@ -302,7 +301,6 @@ def push_data_to_ls(fn):
         if len(d["textbook"]) == 0:
             continue
         log("%s/%s users\n" % (curr_d, len(all_data)))
-        log(d[constants.EMAIL_XPRESS_LEADS_HEADER] + "\n")
         headers = {"Content-Type": "application/json", "Accept": "application/json"}
         r = requests.post(constants.LS_POST_URL, data=json.dumps(d), headers=headers)
         log("Successfully finished.\n")
