@@ -4,3 +4,5 @@ cronlog.txt
 .vscode
 new_data.csv
 .DS_Store
+archive.csv
+**/__pycache__/
