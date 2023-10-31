@@ -1,1 +1,0 @@
-Changed 2022 model to submit via multipart formdata for Pardot, was JSON in previous years but stopped working for whatever reason.
