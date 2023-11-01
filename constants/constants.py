@@ -1,7 +1,12 @@
-SIGNIN_URL = "https=//www.xpressleadpro.com/portal/public/signin/ligani@waysidepublishing.com/2182520/qualifiers"
-DOWNLOAD_URL = "https=//www.xpressleadpro.com/portal/public/downloadbyexid/2182520/csv"
+#update this each year with the new email and id number, get this from the xpress leads sign up email
+SIGNIN_URL = "https://xpressleadpro.com/portal/public/signin/ligani@waysidepublishing.com/2182520/qualifiers"
+#update this with the new exhibit id
+DOWNLOAD_URL = "https://xpressleadpro.com/portal/public/downloadbyexid/2182520/csv"
+#update this to the current form URL
 PARDOT_FORM_URL = "https://www2.waysidepublishing.com/l/359661/2022-11-04/296jkw4"
+#this should stay the same each year
 LS_POST_URL = "https://learningsite.waysidepublishing.com/api/user-campaign/"
+#this may change, if your requests to the LS are failing ask someone on the dev team to verify this is current.
 LS_POST_KEY = "EOQ89SMVP3K"
 
 FIRST_NAME_FIELD_ID = "359661_164319pi_359661_164319"

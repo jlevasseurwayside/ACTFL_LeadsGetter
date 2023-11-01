@@ -18,17 +18,16 @@ cronlog_fn = os.path.join(cwd, "cronlog.txt")
 log_fn = os.path.join(cwd, "log.txt")
 # Debug variables
 debug_remove_archive = False
+DEBUG_INVITES_EMAIL = "tc7qpw+kibph6lv0nmc@sharklasers.com"
 
 
 def get_conf_data():
-    url = "https://www.xpressleadpro.com/portal/public/signin/ligani@waysidepublishing.com/2182520/qualifiers"
-
     s = requests.Session()
 
-    s.get(url)
+    s.get(constants.SIGNIN_URL)
 
     download_url = (
-        "https://www.xpressleadpro.com/portal/public/downloadbyexid/2182520/csv"
+        constants.DOWNLOAD_URL
     )
 
     with open(new_fn, "wb") as out_file:
@@ -269,7 +268,7 @@ def push_data_to_ls(fn):
                 if header == constants.EMAIL_XPRESS_LEADS_HEADER:
                     # for testing email invites
                     if "cdsreg" in curr_val:
-                        data["email"] = "jlevdev@gmail.com"
+                        data["email"] = constants.DEBUG_INVITES_EMAIL
                     else:
                         data["email"] = curr_val
 
@@ -358,7 +357,7 @@ def main():
 
             push_data_to_pardot(parsed_data_fn)
 
-            # push_data_to_ls(parsed_data_fn)
+            push_data_to_ls(parsed_data_fn)
 
             # Deleting "archive.csv" and "delta.csv" if necessary, renames "new_data.csv" to "archive.csv"
             cleanup(0)
