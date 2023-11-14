@@ -268,7 +268,7 @@ def push_data_to_ls(fn):
                 if header == constants.EMAIL_XPRESS_LEADS_HEADER:
                     # for testing email invites
                     if "cdsreg" in curr_val:
-                        data["email"] = constants.DEBUG_INVITES_EMAIL
+                        data["email"] = DEBUG_INVITES_EMAIL
                     else:
                         data["email"] = curr_val
 
@@ -316,7 +316,7 @@ def log(text):
 def cron_log(text):
     with open(cronlog_fn, "a+") as c_log:
         if text:
-            c_log.write(text)
+            c_log.write(str(text))
         else:
             c_log.write(
                 "Cron ran at: "
