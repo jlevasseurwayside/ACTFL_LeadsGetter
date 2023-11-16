@@ -214,6 +214,10 @@ def push_data_to_pardot(fn):
                             pardot_data[tag_name] = constants.STATE_MAP[value]
                         except KeyError:
                             pass
+                    elif header == constants.ZIP_XPRESS_LEADS_HEADER:
+                        # if SF admins get alpha-numeric changes working for the pardot form, remove this condition for zip
+                        if str(value).isnumeric():
+                            pardot_data[tag_name] = value
                     else:
                         pardot_data[tag_name] = value
             all_data.append(pardot_data)
@@ -230,7 +234,7 @@ def push_data_to_pardot(fn):
                 continue
             log("%s/%s users\n" % (curr_data, len(all_data)))
             r = requests.post(constants.PARDOT_FORM_URL, files=multipartify(data))
-            # print(r.content)
+            #print(r.content)
             log("Successfully finished.\n")
             curr_data += 1
 
@@ -316,7 +320,7 @@ def log(text):
 def cron_log(text):
     with open(cronlog_fn, "a+") as c_log:
         if text:
-            c_log.write(text)
+            c_log.write(str(text))
         else:
             c_log.write(
                 "Cron ran at: "
