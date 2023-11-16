@@ -17,8 +17,8 @@ lock_fn = os.path.join(cwd, "lock.txt")
 cronlog_fn = os.path.join(cwd, "cronlog.txt")
 log_fn = os.path.join(cwd, "log.txt")
 # Debug variables
-debug_remove_archive = True
-DEBUG_INVITES_EMAIL = "tc7qpw+kibph6lv0nmc@sharklasers.com"
+debug_remove_archive = False
+DEBUG_INVITES_EMAIL = "asdfasdfasdfasdfa1234@sharklasers.com"
 
 
 def get_conf_data():
@@ -361,7 +361,7 @@ def main():
 
             push_data_to_pardot(parsed_data_fn)
 
-            push_data_to_ls(parsed_data_fn)
+            #push_data_to_ls(parsed_data_fn)
 
             # Deleting "archive.csv" and "delta.csv" if necessary, renames "new_data.csv" to "archive.csv"
             cleanup(0)
