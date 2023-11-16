@@ -5,7 +5,7 @@ DOWNLOAD_URL = "https://www.xpressleadpro.com/portal/public/downloadbyexid/22773
 #update this to the current form URL
 PARDOT_FORM_URL = "https://www2.waysidepublishing.com/l/359661/2022-11-04/296jkw4"
 #this should stay the same each year
-LS_POST_URL = "https://learningsite.waysidepublishing.com/api/v2/user-campaign/"
+LS_POST_URL = "https://learningsite.waysidepublishing.com/api/v2/user-campaign"
 #this may change, if your requests to the LS are failing ask someone on the dev team to verify this is current.
 LS_POST_KEY = "EOQ89SMVP3K"
 

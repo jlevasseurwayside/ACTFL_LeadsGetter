@@ -361,7 +361,7 @@ def main():
 
             push_data_to_pardot(parsed_data_fn)
 
-            #push_data_to_ls(parsed_data_fn)
+            push_data_to_ls(parsed_data_fn)
 
             # Deleting "archive.csv" and "delta.csv" if necessary, renames "new_data.csv" to "archive.csv"
             cleanup(0)
