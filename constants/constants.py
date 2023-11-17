@@ -117,8 +117,21 @@ NB_XPRESS_LEADS = "Neue Blickwinkel German"
 CU_XPRESS_LEADS = "Chiarissimo Uno Italian"
 CD_XPRESS_LEADS = "Chiarissimo Due Italian"
 SM_XPRESS_LEADS = "Scandite Muros Latin"
+# note: these values were not actual - leaving them in to not break things
 IK1_XPRESS_LEADS = "InterKulturell 1 German"
 IK2_XPRESS_LEADS = "InterKulturell 2 German"
+
+TEXTBOOK_ALIAS_LOOKUP = {
+    ECF1_XPRESS_LEADS: ['EntreCultures 1'],
+    ECF2_XPRESS_LEADS: ['EntreCultures 2'],
+    ECF3_XPRESS_LEADS: ['EntreCultures 3 Unit 1 French', 'EntreCultures 3 Print Sample Unit'],
+    ECF4_XPRESS_LEADS: ['EntreCultures 4 Unit 1 French', 'EntreCultures 4 Print Sample Unit'],
+
+    ECS4_XPRESS_LEADS: ['EntreCulturas 4 Unit 1 Spanish', 'EntreCulturas 4 Print Sample Unit'],
+
+    IK1_XPRESS_LEADS: ['InterKulturell 1 German Print Sample Unit'],
+    IK2_XPRESS_LEADS: ['InterKulturell 2 German Print Sample Unit']
+}
 
 TEXTBOOK_ID_MAP = {
     ECS1A_XPRESS_LEADS: "9122772",
@@ -136,6 +149,7 @@ TEXTBOOK_ID_MAP = {
     ECF1_XPRESS_LEADS: "9330042",
     ECF2_XPRESS_LEADS: "8404114",
     ECF3_XPRESS_LEADS: "12941687",
+    ECF4_XPRESS_LEADS: "16550747",
     APPRENONS_XPRESS_LEADS: "11138",
     NB_XPRESS_LEADS: "12741",
     CU_XPRESS_LEADS: "6698",
