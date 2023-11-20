@@ -1,11 +1,11 @@
 #update this each year with the new email and id number, get this from the xpress leads sign up email
-SIGNIN_URL = "https://xpressleadpro.com/portal/public/signin/ligani@waysidepublishing.com/2182520/qualifiers"
+SIGNIN_URL = "https://www.xpressleadpro.com/portal/public/signin/cfloresgirnus@waysidepublishing.com/373B52D0-F77D-498B-95E6-59E80F0A289D/qualifiers"
 #update this with the new exhibit id
-DOWNLOAD_URL = "https://xpressleadpro.com/portal/public/downloadbyexid/2182520/csv"
+DOWNLOAD_URL = "https://www.xpressleadpro.com/portal/public/downloadbyexid/2277303/csv"
 #update this to the current form URL
 PARDOT_FORM_URL = "https://www2.waysidepublishing.com/l/359661/2022-11-04/296jkw4"
 #this should stay the same each year
-LS_POST_URL = "https://learningsite.waysidepublishing.com/api/user-campaign/"
+LS_POST_URL = "https://learningsite.waysidepublishing.com/api/v2/user-campaign"
 #this may change, if your requests to the LS are failing ask someone on the dev team to verify this is current.
 LS_POST_KEY = "EOQ89SMVP3K"
 
@@ -32,8 +32,10 @@ COMMENT_FIELD_ID = "359661_164418pi_359661_164418"
 LEAD_SOURCES_FIELD_ID = "359661_164406pi_359661_164406"
 
 DEADLINE_VALUES = {
-    "Before September 2023": "359661_164340pi_359661_164340_1809576",
-    "After September 2023": "359661_164340pi_359661_164340_1809579",
+    "2024-2025": "359661_164340pi_359661_164340_1809573",
+    "2025-2026": "359661_164340pi_359661_164340_1809576",
+    "After 2026": "359661_164340pi_359661_164340_1809579",
+    "I do not know": "359661_164340pi_359661_164340_1809582",
 }
 
 LEADS_VALUES = {
@@ -67,8 +69,8 @@ LMS_VALUES = {
 }
 
 STAY_IN_TOUCH_VALUES = {
-    "German 1, 2, 3": "359661_164841pi_359661_164841_1811421",
-    "EntreCulturas 4": "359661_165465pi_359661_165465_1814787",
+    "German 3,4": "359661_194165pi_359661_194165_2129744",
+    "Ensamble": "359661_194351pi_359661_194351_2133413",
 }
 
 FIRST_NAME_XPRESS_LEADS_HEADER = "First Name"
@@ -77,16 +79,16 @@ EMAIL_XPRESS_LEADS_HEADER = "Email"
 COMPANY_XPRESS_LEADS_HEADER = "Company"
 ADD_TITLE_XPRESS_LEADS_HEADER = "Add Title"
 WHAT_LMS_XPRESS_LEADS_HEADER = "What Learning Management System LMS do you use"
-NAME_OF_WAYSIDER_XPRESS_LEADS_HEADER = "Name of Waysider completing the form"
 ADDRESS_1_XPRESS_LEADS_HEADER = "Address 1"
 ADDRESS_2_XPRESS_LEADS_HEADER = "Address 2"
 CITY_XPRESS_LEADS_HEADER = "City"
 STATE_XPRESS_LEADS_HEADER = "State/Province"
 ZIP_XPRESS_LEADS_HEADER = "Zip Code"
 COUNTRY_XPRESS_LEADS_HEADER = "Country"
-WHAT_PROGRAM_XPRESS_LEADS_HEADER = "What program do you currently use"
+NAME_OF_WAYSIDER_XPRESS_LEADS_HEADER = "Name of Waysider completing the form"
+WHAT_PROGRAM_XPRESS_LEADS_HEADER = "What primary programs do you currently use"
 DOES_YOUR_SCHOOL_XPRESS_LEADS_HEADER = "Does your school or district use"
-NOTES_XPRESS_LEADS_HEADER = "NOTES (Q11)"
+NOTES_XPRESS_LEADS_HEADER = "NOTES"
 ADOPTION_DEADLINE_XPRESS_LEADS_HEADER = "The next adoption related deadline will be"
 LEAD_RATING_XPRESS_LEADS_HEADER = "Lead Rating"
 EMAIL_30_DAY_XPRESS_LEADS_HEADER = "Email 30 day access to these programs"
@@ -109,11 +111,27 @@ ECF1B_XPRESS_LEADS = "EntreCultures 1B French"
 ECF1_XPRESS_LEADS = "EntreCultures 1 French"
 ECF2_XPRESS_LEADS = "EntreCultures 2 French"
 ECF3_XPRESS_LEADS = "EntreCultures 3 French"
+ECF4_XPRESS_LEADS = "EntreCultures 4 French"
 APPRENONS_XPRESS_LEADS = "APprenons"
 NB_XPRESS_LEADS = "Neue Blickwinkel German"
 CU_XPRESS_LEADS = "Chiarissimo Uno Italian"
 CD_XPRESS_LEADS = "Chiarissimo Due Italian"
 SM_XPRESS_LEADS = "Scandite Muros Latin"
+# note: these values were not actual - leaving them in to not break things
+IK1_XPRESS_LEADS = "InterKulturell 1 German"
+IK2_XPRESS_LEADS = "InterKulturell 2 German"
+
+TEXTBOOK_ALIAS_LOOKUP = {
+    ECF1_XPRESS_LEADS: ['EntreCultures 1'],
+    ECF2_XPRESS_LEADS: ['EntreCultures 2'],
+    ECF3_XPRESS_LEADS: ['EntreCultures 3 Unit 1 French', 'EntreCultures 3 Print Sample Unit'],
+    ECF4_XPRESS_LEADS: ['EntreCultures 4 Unit 1 French', 'EntreCultures 4 Print Sample Unit'],
+
+    ECS4_XPRESS_LEADS: ['EntreCulturas 4 Unit 1 Spanish', 'EntreCulturas 4 Print Sample Unit'],
+
+    IK1_XPRESS_LEADS: ['InterKulturell 1 German Print Sample Unit'],
+    IK2_XPRESS_LEADS: ['InterKulturell 2 German Print Sample Unit']
+}
 
 TEXTBOOK_ID_MAP = {
     ECS1A_XPRESS_LEADS: "9122772",
@@ -131,6 +149,7 @@ TEXTBOOK_ID_MAP = {
     ECF1_XPRESS_LEADS: "9330042",
     ECF2_XPRESS_LEADS: "8404114",
     ECF3_XPRESS_LEADS: "12941687",
+    ECF4_XPRESS_LEADS: "16550747",
     APPRENONS_XPRESS_LEADS: "11138",
     NB_XPRESS_LEADS: "12741",
     CU_XPRESS_LEADS: "6698",
@@ -158,6 +177,9 @@ DIGITAL_VALUES = {
     ECF1_XPRESS_LEADS: "359661_164847pi_359661_164847_1811427",
     ECF2_XPRESS_LEADS: "359661_164901pi_359661_164901_1811481",
     ECF3_XPRESS_LEADS: "359661_164910pi_359661_164910_1811490",
+    ECF4_XPRESS_LEADS: "359661_164892pi_359661_164892_1811472",
+    IK1_XPRESS_LEADS: "359661_194351pi_359661_194351_2133413",
+    IK2_XPRESS_LEADS: "359661_194177pi_359661_194177_2129756",
 }
 
 PRINT_VALUES = {
@@ -180,11 +202,13 @@ PRINT_VALUES = {
     ECF1_XPRESS_LEADS: "359661_164850pi_359661_164850_1811430",
     ECF2_XPRESS_LEADS: "359661_164904pi_359661_164904_1811484",
     ECF3_XPRESS_LEADS: "359661_164913pi_359661_164913_1811493",
+    ECF4_XPRESS_LEADS: "359661_164895pi_359661_164895",
+    IK1_XPRESS_LEADS: "359661_194171pi_359661_194171_2129750",
+    IK2_XPRESS_LEADS: "359661_194180pi_359661_194180",
 }
 
 SHIP_VALUES = {
-    ECS1_XPRESS_LEADS: "359661_164802pi_359661_164802_1811376",
-    ECS1A_XPRESS_LEADS: "359661_164784pi_359661_164784_1811358",
+    ECS1_XPRESS_LEADS: "359661_164784pi_359661_164784_1811358",
     ECS1B_XPRESS_LEADS: "359661_164793pi_359661_164793_1811367",
     ECS2_XPRESS_LEADS: "359661_164811pi_359661_164811_1811385",
     ECS3_XPRESS_LEADS: "359661_164820pi_359661_164820_1811394",
@@ -202,6 +226,9 @@ SHIP_VALUES = {
     ECF1_XPRESS_LEADS: "359661_164853pi_359661_164853_1811433",
     ECF2_XPRESS_LEADS: "359661_164907pi_359661_164907_1811487",
     ECF3_XPRESS_LEADS: "359661_164916pi_359661_164916_1811496",
+    ECF4_XPRESS_LEADS: "359661_194345pi_359661_194345_2133407",
+    IK1_XPRESS_LEADS: "359661_194174pi_359661_194174_2129753",
+    IK2_XPRESS_LEADS: "359661_194183pi_359661_194183_2129762",
 }
 
 STATE_MAP = {

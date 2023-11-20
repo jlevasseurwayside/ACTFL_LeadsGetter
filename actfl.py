@@ -18,7 +18,7 @@ cronlog_fn = os.path.join(cwd, "cronlog.txt")
 log_fn = os.path.join(cwd, "log.txt")
 # Debug variables
 debug_remove_archive = False
-DEBUG_INVITES_EMAIL = "tc7qpw+kibph6lv0nmc@sharklasers.com"
+DEBUG_INVITES_EMAIL = "jameslevasseurwayside@gmail.com"
 
 
 def get_conf_data():
@@ -58,6 +58,16 @@ def get_just_new_data_from():
 
         return delta_fn
 
+# gets value in dict given and tries to look up alias values for textbook related dicts
+def get_mapped_value(v, dict):
+    mapped_val = dict.get(v)
+    if mapped_val != None and mapped_val != "":
+        return mapped_val
+    elif dict in [constants.DIGITAL_VALUES, constants.PRINT_VALUES, constants.SHIP_VALUES, constants.TEXTBOOK_ID_MAP]:
+        for textbook_identifier, alias_array in constants.TEXTBOOK_ALIAS_LOOKUP.items():
+            if v in alias_array:
+                return dict.get(textbook_identifier)
+    return None
 
 CHECKBOX_FIELDTYPE = "checkbox"
 DROPDOWN_FIELDTYPE = "dropdown"
@@ -68,8 +78,8 @@ def map_from_to(v, n, fieldtype):
     ret_val = {}
 
     for v in all_val:
-        curr_tag_name = n.get(v)
-        if curr_tag_name != None and curr_tag_name != "":
+        curr_tag_name = get_mapped_value(v, n)
+        if curr_tag_name != None:
             tag_pieces = curr_tag_name.split("_")
             new_key = (
                 curr_tag_name
@@ -85,8 +95,8 @@ def handle_multioption_headers(header, value):
     if header == constants.ADOPTION_DEADLINE_XPRESS_LEADS_HEADER:
         return map_from_to(value, constants.DEADLINE_VALUES, DROPDOWN_FIELDTYPE)
 
-    if header == constants.LEAD_RATING_XPRESS_LEADS_HEADER:
-        return map_from_to(value, constants.LEADS_VALUES, DROPDOWN_FIELDTYPE)
+    #if header == constants.LEAD_RATING_XPRESS_LEADS_HEADER:
+        #return map_from_to(value, constants.LEADS_VALUES, DROPDOWN_FIELDTYPE)
 
     if header == constants.WHAT_LMS_XPRESS_LEADS_HEADER:
         return map_from_to(value, constants.LMS_VALUES, DROPDOWN_FIELDTYPE)
@@ -173,7 +183,7 @@ def push_data_to_pardot(fn):
                     if header in [
                         constants.ADOPTION_DEADLINE_XPRESS_LEADS_HEADER,
                         constants.WHAT_LMS_XPRESS_LEADS_HEADER,
-                        constants.LEAD_RATING_XPRESS_LEADS_HEADER,
+                        #pconstants.LEAD_RATING_XPRESS_LEADS_HEADER,
                         constants.STAY_IN_TOUCH_XPRESS_LEADS_HEADER,
                         constants.EMAIL_30_DAY_XPRESS_LEADS_HEADER,
                         constants.WAYSIDE_PRINT_XPRESS_LEADS_HEADER,
@@ -212,8 +222,12 @@ def push_data_to_pardot(fn):
                     elif header == constants.STATE_XPRESS_LEADS_HEADER:
                         try:
                             pardot_data[tag_name] = constants.STATE_MAP[value]
-                        except KeyError:
-                            pass
+                        except KeyError as ke:
+                            log(ke)
+                    elif header == constants.ZIP_XPRESS_LEADS_HEADER:
+                        # if SF admins get alpha-numeric changes working for the pardot form, remove this condition for zip
+                        if str(value).isnumeric():
+                            pardot_data[tag_name] = value
                     else:
                         pardot_data[tag_name] = value
             all_data.append(pardot_data)
@@ -225,15 +239,12 @@ def push_data_to_pardot(fn):
             + " Filling out Pardot form... \n"
         )
         for data in all_data:
-            # pprint(data)
-            if data[constants.COMMENT_FIELD_ID] == "":
-                continue
+            #pprint(data)
+            pprint("Pardot... processing %s/%s users" % (curr_data, len(all_data)))
             log("%s/%s users\n" % (curr_data, len(all_data)))
             r = requests.post(constants.PARDOT_FORM_URL, files=multipartify(data))
-            # print(r.content)
-            log("Successfully finished.\n")
             curr_data += 1
-
+        log("Successfully finished.\n")
 
 def push_data_to_ls(fn):
     with open(fn, "r") as csvfile:
@@ -261,7 +272,7 @@ def push_data_to_ls(fn):
                     all_textbooks = curr_val.split("|")
 
                     for t in all_textbooks:
-                        curr_id = constants.TEXTBOOK_ID_MAP.get(t)
+                        curr_id = get_mapped_value(t, constants.TEXTBOOK_ID_MAP)
                         if curr_id != None and curr_id.strip() != "":
                             data["textbook"].append(curr_id)
 
@@ -299,17 +310,20 @@ def push_data_to_ls(fn):
     for d in all_data:
         if len(d["textbook"]) == 0:
             continue
+        pprint("Learning Site processing... %s/%s users\n" % (curr_d, len(all_data)))
         log("%s/%s users\n" % (curr_d, len(all_data)))
         headers = {"Content-Type": "application/json", "Accept": "application/json"}
         r = requests.post(constants.LS_POST_URL, data=json.dumps(d), headers=headers)
-        log("Successfully finished.\n")
-        # print(r.text)
+        print(r.text)
         curr_d += 1
+    pprint("Successfully finished.")
+    log("Successfully finished.\n")
+
 
 
 def log(text):
     append_log = open(log_fn, "a+")
-    append_log.write(text)
+    append_log.write(str(text))
     append_log.close()
 
 
